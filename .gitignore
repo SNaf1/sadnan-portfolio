@@ -133,5 +133,6 @@ Thumbs.db
 # Turborepo cache
 .turbo/
 
-# Personal documents
+# Personal documents — allow only the public CV
 *.pdf
+!apps/web/public/Sadnan_Nafis_CV.pdf

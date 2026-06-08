@@ -7,17 +7,17 @@ import * as z from "zod";
 import { portfolioData, Project } from "@/data/portfolio";
 import { TiltCard } from "@/components/TiltCard";
 import { ProjectModal } from "@/components/ProjectModal";
-import { 
-  Sun, 
-  Moon, 
-  Github, 
-  Linkedin, 
-  Mail, 
-  FileDown, 
-  ArrowRight, 
-  Calendar, 
-  MapPin, 
-  CheckCircle2, 
+import {
+  Sun,
+  Moon,
+  Github,
+  Linkedin,
+  Mail,
+  FileDown,
+  ArrowRight,
+  Calendar,
+  MapPin,
+  CheckCircle2,
   Send,
   Loader2,
   ExternalLink,
@@ -60,15 +60,16 @@ export default function PortfolioHome() {
     contact: useRef<HTMLElement>(null),
   };
 
-  // 1. Dark/Light Theme Handler (Class-based Selector Variant)
+  // 1. Dark/Light Theme Handler — defaults to dark if no preference saved
   useEffect(() => {
     const savedTheme = localStorage.getItem("portfolio-theme") as "light" | "dark" | null;
-    if (savedTheme === "dark") {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-    } else {
+    // Default is dark unless user explicitly chose light
+    if (savedTheme === "light") {
       setTheme("light");
       document.documentElement.classList.remove("dark");
+    } else {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
     }
   }, []);
 
@@ -180,14 +181,14 @@ export default function PortfolioHome() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100">
-      
+    <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100">
+
       {/* Sticky Header & Navigation */}
-      <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/80">
+      <header className="sticky top-0 z-40 border-b border-zinc-200 bg-zinc-100/95 backdrop-blur-md dark:border-zinc-900 dark:bg-zinc-950/80">
         <div className="mx-auto flex max-w-7xl h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-          
+
           {/* Logo / Name */}
-          <button 
+          <button
             onClick={() => scrollTo("hero")}
             className="text-lg font-black tracking-tighter uppercase text-zinc-900 hover:text-blue-600 dark:text-zinc-50 dark:hover:text-blue-500"
           >
@@ -200,11 +201,10 @@ export default function PortfolioHome() {
               <button
                 key={item}
                 onClick={() => scrollTo(item as any)}
-                className={`text-xs font-black uppercase tracking-wider transition-colors duration-200 pb-1 border-b-2 ${
-                  activeSection === item
-                    ? "border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-500"
-                    : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                }`}
+                className={`text-xs font-black uppercase tracking-wider transition-colors duration-200 pb-1 border-b-2 ${activeSection === item
+                  ? "border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-500"
+                  : "border-transparent text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  }`}
               >
                 {item}
               </button>
@@ -217,7 +217,7 @@ export default function PortfolioHome() {
               href={portfolioData.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               aria-label="GitHub Profile"
               onClick={() => trackEvent("SOCIAL_CLICK", "github")}
             >
@@ -228,7 +228,7 @@ export default function PortfolioHome() {
               href={portfolioData.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               aria-label="LinkedIn Profile"
               onClick={() => trackEvent("SOCIAL_CLICK", "linkedin")}
             >
@@ -238,7 +238,7 @@ export default function PortfolioHome() {
             {/* Simple Minimal Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="rounded-xl border border-zinc-200 p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+              className="rounded-xl border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
               aria-label="Toggle dark mode"
             >
               {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
@@ -259,7 +259,7 @@ export default function PortfolioHome() {
 
       {/* Main Container */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        
+
         {/* HERO SECTION - Left-Aligned Stacked Editorial Layout */}
         <section
           id="hero"
@@ -269,9 +269,9 @@ export default function PortfolioHome() {
           {/* Premium Circular Avatar Frame (Stacked Left Above text) */}
           <div className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shadow-xl shadow-blue-500/5 hover:border-blue-500/50 transition-all duration-500 hover:scale-105 mb-8">
             <div className="w-full h-full rounded-full overflow-hidden relative border-2 border-white dark:border-zinc-950">
-              <img 
-                src="/Sadnan Nafis pic.png" 
-                alt="Sadnan Nafis Portrait" 
+              <img
+                src="/Sadnan Nafis pic.png"
+                alt="Sadnan Nafis Portrait"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -293,12 +293,12 @@ export default function PortfolioHome() {
             </h1>
 
             {/* Smaller, Sleeker Subtitle */}
-            <h2 className="mb-6 text-lg font-extrabold tracking-tight text-zinc-500 dark:text-zinc-450 sm:text-xl uppercase tracking-wide">
+            <h2 className="mb-6 text-lg font-extrabold tracking-tight text-zinc-600 dark:text-zinc-450 sm:text-xl uppercase tracking-wide">
               {portfolioData.title}
             </h2>
 
             {/* Professional Summary */}
-            <p className="mb-8 text-sm leading-relaxed text-zinc-650 dark:text-zinc-400 sm:text-base max-w-3xl">
+            <p className="mb-8 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-base max-w-3xl">
               {portfolioData.profileSummary}
             </p>
 
@@ -310,13 +310,13 @@ export default function PortfolioHome() {
                 className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-3 text-xs font-black uppercase tracking-wider text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-600 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-blue-500 dark:hover:text-white"
                 onClick={() => trackEvent("DOWNLOAD_CV", "hero")}
               >
-                Download Resume
+                Download CV
                 <FileDown className="h-4 w-4" />
               </a>
 
               <button
                 onClick={() => scrollTo("contact")}
-                className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-wider text-zinc-855 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-600 hover:text-blue-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-blue-500 dark:hover:text-blue-400"
+                className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 bg-white px-5 py-3 text-xs font-black uppercase tracking-wider text-zinc-800 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-600 hover:text-blue-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-blue-500 dark:hover:text-blue-400"
               >
                 Let's Talk
                 <ArrowRight className="h-4 w-4" />
@@ -340,7 +340,7 @@ export default function PortfolioHome() {
                 Projects & Research
               </h2>
             </div>
-            
+
             {/* Scroll Buttons */}
             <div className="mt-4 flex gap-2 md:mt-0">
               <button
@@ -361,17 +361,17 @@ export default function PortfolioHome() {
           </div>
 
           {/* Horizontal Scroll Layout (Exactly 3 cards fit perfectly on desktop) */}
-          <div 
+          <div
             ref={scrollContainerRef}
             className="flex gap-6 overflow-x-auto pb-6 pt-4 px-2 no-scrollbar snap-x snap-mandatory"
           >
             {portfolioData.projects.map((project) => (
-              <div 
-                key={project.id} 
+              <div
+                key={project.id}
                 className="w-[290px] sm:w-[380px] lg:w-[calc((100%-48px)/3)] shrink-0 snap-start"
               >
                 <TiltCard
-                  className="h-[360px] flex flex-col justify-between bg-zinc-50 p-6 dark:bg-zinc-900/30 cursor-pointer group"
+                  className="h-[360px] flex flex-col justify-between bg-white p-6 dark:bg-zinc-900/30 cursor-pointer group"
                 >
                   {/* Clickable Card Area */}
                   <div className="flex-1 flex flex-col justify-between" onClick={() => {
@@ -383,12 +383,12 @@ export default function PortfolioHome() {
                       <span className="text-[10px] font-black uppercase tracking-widest text-blue-500 dark:text-blue-400">
                         {project.category}
                       </span>
-                      
+
                       {/* Title */}
                       <h3 className="mt-2 text-2xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 transition-colors duration-200">
                         {project.title}
                       </h3>
-                      
+
                       {/* Short Description */}
                       <p className="mt-4 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4">
                         {project.shortDescription}
@@ -406,7 +406,7 @@ export default function PortfolioHome() {
                         </span>
                       ))}
                       {project.tags.length > 3 && (
-                        <span className="text-xs text-zinc-400 dark:text-zinc-505 font-bold self-center">
+                        <span className="text-xs text-zinc-600 dark:text-zinc-500 font-bold self-center">
                           +{project.tags.length - 3}
                         </span>
                       )}
@@ -432,7 +432,7 @@ export default function PortfolioHome() {
                           href={project.demoLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-zinc-500 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-450 p-1"
+                          className="text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-450 p-1"
                           title="Live Demo"
                         >
                           <ExternalLink className="h-4 w-4" />
@@ -443,7 +443,7 @@ export default function PortfolioHome() {
                           href={project.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-455 dark:hover:text-zinc-100 p-1"
+                          className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-455 dark:hover:text-zinc-100 p-1"
                           title="Codebase Repository"
                         >
                           <Github className="h-4 w-4" />
@@ -456,9 +456,8 @@ export default function PortfolioHome() {
             ))}
           </div>
 
-          <div className="mt-2 flex justify-between items-center px-2 text-xs font-bold text-zinc-400 dark:text-zinc-505">
+          <div className="mt-2 flex justify-between items-center px-2 text-xs font-bold text-zinc-500 dark:text-zinc-600">
             <span>Swipe or click arrows to explore</span>
-            <span>Click cards for details</span>
           </div>
         </section>
 
@@ -494,9 +493,9 @@ export default function PortfolioHome() {
                       {exp.company}
                     </p>
                   </div>
-                  
+
                   {/* Meta Details */}
-                  <div className="mt-1 flex flex-wrap gap-x-4 text-xs font-semibold text-zinc-400 dark:text-zinc-505">
+                  <div className="mt-1 flex flex-wrap gap-x-4 text-xs font-semibold text-zinc-600 dark:text-zinc-500">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="h-3.5 w-3.5" />
                       {exp.duration}
@@ -511,7 +510,7 @@ export default function PortfolioHome() {
                 {/* Achievements points */}
                 <ul className="mt-4 list-none space-y-2.5">
                   {exp.points.map((point, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-sm leading-relaxed text-zinc-650 dark:text-zinc-400">
+                    <li key={idx} className="flex items-start gap-2.5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-400">
                       <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-blue-500/80 dark:text-blue-400/80" />
                       {point}
                     </li>
@@ -542,18 +541,18 @@ export default function PortfolioHome() {
             {portfolioData.skills.map((skillGroup, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-900 dark:bg-zinc-900/40"
+                className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-900 dark:bg-zinc-900/40"
               >
                 <h3 className="mb-5 text-xs font-black uppercase tracking-wider text-blue-600 dark:text-blue-500 border-b border-zinc-200/50 pb-2 dark:border-zinc-800">
                   {skillGroup.category}
                 </h3>
-                
+
                 {/* Clean, Symmetrical internal grid */}
                 <div className="grid grid-cols-2 gap-2 text-center">
                   {skillGroup.items.map((skill) => (
                     <span
                       key={skill}
-                      className="rounded-lg border border-zinc-200/50 bg-white py-2 text-[10px] font-extrabold uppercase tracking-wider text-zinc-800 dark:border-zinc-850 dark:bg-zinc-900 dark:text-zinc-200 flex items-center justify-center min-h-[36px]"
+                      className="rounded-lg border border-zinc-200/50 bg-zinc-50 py-2 text-[10px] font-extrabold uppercase tracking-wider text-zinc-800 dark:border-zinc-850 dark:bg-zinc-900 dark:text-zinc-200 flex items-center justify-center min-h-[36px]"
                     >
                       {skill}
                     </span>
@@ -566,15 +565,15 @@ export default function PortfolioHome() {
           {/* Achievements Grid */}
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {portfolioData.achievements.map((ach) => (
-              <div 
+              <div
                 key={ach.id}
-                className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
+                className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-zinc-100/60 p-6 shadow-sm dark:border-zinc-900 dark:bg-zinc-950"
               >
                 <div>
                   <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
                     {ach.title}
                   </h4>
-                  <p className="mt-2 text-xs leading-relaxed text-zinc-550 dark:text-zinc-400">
+                  <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                     {ach.description}
                   </p>
                 </div>
@@ -610,7 +609,7 @@ export default function PortfolioHome() {
           className="border-t border-zinc-200 py-16 dark:border-zinc-900 lg:py-24"
         >
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            
+
             {/* Info Side */}
             <div>
               <p className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-500">
@@ -624,14 +623,14 @@ export default function PortfolioHome() {
               </p>
 
               <div className="mt-8 space-y-4">
-                <a 
+                <a
                   href={`mailto:${portfolioData.email}`}
                   className="flex items-center gap-3 text-sm font-semibold text-zinc-650 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400"
                 >
                   <Mail className="h-5 w-5 text-blue-600 dark:text-blue-500" />
                   {portfolioData.email}
                 </a>
-                <span className="flex items-center gap-3 text-sm font-semibold text-zinc-450 dark:text-zinc-550">
+                <span className="flex items-center gap-3 text-sm font-semibold text-zinc-600 dark:text-zinc-550">
                   <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-500" />
                   {portfolioData.location}
                 </span>
@@ -659,17 +658,17 @@ export default function PortfolioHome() {
             </div>
 
             {/* Form Side */}
-            <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-900 dark:bg-zinc-900/20 sm:p-8">
+            <div className="rounded-3xl border border-zinc-200 bg-zinc-100/60 p-6 dark:border-zinc-900 dark:bg-zinc-900/20 sm:p-8">
               <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5">
                 <div>
-                  <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+                  <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-2">
                     Name
                   </label>
                   <input
                     type="text"
                     id="name"
                     {...register("name")}
-                    className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-blue-500"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-blue-500"
                     placeholder="John Doe"
                   />
                   {errors.name && (
@@ -680,14 +679,14 @@ export default function PortfolioHome() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+                  <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-2">
                     Email
                   </label>
                   <input
                     type="email"
                     id="email"
                     {...register("email")}
-                    className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-blue-500"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-blue-500"
                     placeholder="john@example.com"
                   />
                   {errors.email && (
@@ -698,14 +697,14 @@ export default function PortfolioHome() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+                  <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-2">
                     Message
                   </label>
                   <textarea
                     id="message"
                     rows={5}
                     {...register("message")}
-                    className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-blue-500"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition-colors duration-200 focus:border-blue-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-blue-500"
                     placeholder="Hi Sadnan, I'd love to connect..."
                   />
                   {errors.message && (
@@ -717,11 +716,10 @@ export default function PortfolioHome() {
 
                 {formStatus.type && (
                   <div
-                    className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                      formStatus.type === "success"
-                        ? "bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-450"
-                        : "bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-450"
-                    }`}
+                    className={`rounded-xl px-4 py-3 text-sm font-semibold ${formStatus.type === "success"
+                      ? "bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-450"
+                      : "bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-450"
+                      }`}
                   >
                     {formStatus.message}
                   </div>
@@ -753,7 +751,7 @@ export default function PortfolioHome() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-200 py-10 dark:border-zinc-900">
-        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 text-xs font-semibold text-zinc-400 dark:text-zinc-505">
+        <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 text-xs font-semibold text-zinc-500 dark:text-zinc-600">
           <p>© {new Date().getFullYear()} Sadnan Nafis. All rights reserved.</p>
           <div className="flex gap-4">
             <a href={portfolioData.github} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500">

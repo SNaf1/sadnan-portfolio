@@ -55,7 +55,7 @@ export const portfolioData = {
   blog: "https://gameriv.com/author/snaf",
   resumePath: "/Sadnan_Nafis_CV.pdf",
   profileSummary: "Software Engineer with hands-on experience building and deploying LLM-powered systems, including Retrieval-Augmented Generation (RAG) pipelines for legal document analysis. Strong background in backend engineering, ML-driven applications, and research-oriented problem solving, with demonstrated ownership of end-to-end systems from prototyping to production.",
-  
+
   projects: [
     {
       id: "echosort",
@@ -192,7 +192,7 @@ export const portfolioData = {
       role: "AI Implementation Engineer",
       company: "PrivacceLabs LLC",
       location: "Wyoming, USA (Dhaka Office)",
-      duration: "October 2025 – Present",
+      duration: "October 2025 – April 2026",
       points: [
         "Led end-to-end development of a production-grade legal RAG system, translating high-level product requirements into deployable backend services, using Python and FastAPI.",
         "Implemented document ingestion, embedding, retrieval, and LLM-based response pipelines supporting structured legal queries.",
