@@ -51,7 +51,7 @@ export const portfolioData = {
   phone: "+8801822442896",
   location: "Dhaka, Bangladesh",
   github: "https://github.com/SNaf1",
-  linkedin: "https://linkedin.com/in/SadnanNafis",
+  linkedin: "https://www.linkedin.com/in/sadnan-nafis/",
   blog: "https://gameriv.com/author/snaf",
   resumePath: "/Sadnan_Nafis_CV.pdf",
   profileSummary: "Software Engineer with hands-on experience building and deploying LLM-powered systems, including Retrieval-Augmented Generation (RAG) pipelines for legal document analysis. Strong background in backend engineering, ML-driven applications, and research-oriented problem solving, with demonstrated ownership of end-to-end systems from prototyping to production.",
