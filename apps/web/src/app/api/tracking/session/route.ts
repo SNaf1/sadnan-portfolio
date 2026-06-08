@@ -6,7 +6,14 @@ import { SessionInitRequest } from "@portfolio/types";
 export async function POST(request: NextRequest) {
   try {
     const body: SessionInitRequest = await request.json();
-    
+
+    // Read redirect alias cookie set by /r/[alias] — highest-priority source attribution
+    const redirectAlias = request.cookies.get("portfolio_redirect_alias")?.value;
+    // Merge alias into UTM fields if present (alias wins over any URL params)
+    const effectiveUtmSource   = redirectAlias ? "portfolio-link" : body.utmSource;
+    const effectiveUtmMedium   = redirectAlias ? "direct"         : body.utmMedium;
+    const effectiveUtmCampaign = redirectAlias ?? body.utmCampaign;
+
     // 1. Resolve Visitor Cookie / Database entry
     let visitorId = request.cookies.get("portfolio_visitor_id")?.value;
     let isNewVisitor = false;
@@ -21,9 +28,9 @@ export async function POST(request: NextRequest) {
       await prisma.visitor.create({
         data: {
           id: visitorId,
-          firstTouchSource: body.utmSource || parseReferrerSource(body.referrer),
-          firstTouchMedium: body.utmMedium || (body.referrer ? "referral" : "direct"),
-          firstTouchCampaign: body.utmCampaign,
+          firstTouchSource: effectiveUtmSource || parseReferrerSource(body.referrer),
+          firstTouchMedium: effectiveUtmMedium || (body.referrer ? "referral" : "direct"),
+          firstTouchCampaign: effectiveUtmCampaign,
           firstTouchUrl: body.landingPage,
         },
       });
@@ -44,15 +51,15 @@ export async function POST(request: NextRequest) {
         data: {
           id: sessionId,
           visitorId: visitorId,
-          lastTouchSource: body.utmSource || parseReferrerSource(body.referrer),
-          lastTouchMedium: body.utmMedium || (body.referrer ? "referral" : "direct"),
+          lastTouchSource: effectiveUtmSource || parseReferrerSource(body.referrer),
+          lastTouchMedium: effectiveUtmMedium || (body.referrer ? "referral" : "direct"),
           referrer: body.referrer,
           landingPage: body.landingPage,
           gclid: body.gclid,
           fbclid: body.fbclid,
-          utmSource: body.utmSource,
-          utmMedium: body.utmMedium,
-          utmCampaign: body.utmCampaign,
+          utmSource: effectiveUtmSource,
+          utmMedium: effectiveUtmMedium,
+          utmCampaign: effectiveUtmCampaign,
           utmContent: body.utmContent,
         },
       });
@@ -60,6 +67,11 @@ export async function POST(request: NextRequest) {
 
     // 3. Prepare response with cookies
     const response = NextResponse.json({ visitorId, sessionId });
+
+    // Clear the redirect alias cookie after consuming it — it's one-shot
+    if (redirectAlias) {
+      response.cookies.set("portfolio_redirect_alias", "", { maxAge: 0, path: "/" });
+    }
 
     // Set visitor cookie (1 year)
     response.cookies.set("portfolio_visitor_id", visitorId, {

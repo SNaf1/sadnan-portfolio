@@ -41,6 +41,15 @@ export default function PortfolioHome() {
   const [formStatus, setFormStatus] = useState<{ type: "success" | "error" | null; message: string }>({ type: null, message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // ── Fire-and-forget analytics event helper ───────────────────────────────
+  const trackEvent = (eventType: string, details?: string) => {
+    fetch("/api/tracking/event", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventType, details }),
+    }).catch(() => { /* silent — never block UI */ });
+  };
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const sectionsRef = {
@@ -68,10 +77,12 @@ export default function PortfolioHome() {
       setTheme("dark");
       document.documentElement.classList.add("dark");
       localStorage.setItem("portfolio-theme", "dark");
+      trackEvent("TOGGLE_THEME", "dark");
     } else {
       setTheme("light");
       document.documentElement.classList.remove("dark");
       localStorage.setItem("portfolio-theme", "light");
+      trackEvent("TOGGLE_THEME", "light");
     }
   };
 
@@ -208,6 +219,7 @@ export default function PortfolioHome() {
               rel="noopener noreferrer"
               className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               aria-label="GitHub Profile"
+              onClick={() => trackEvent("SOCIAL_CLICK", "github")}
             >
               <Github className="h-5 w-5" />
             </a>
@@ -218,6 +230,7 @@ export default function PortfolioHome() {
               rel="noopener noreferrer"
               className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               aria-label="LinkedIn Profile"
+              onClick={() => trackEvent("SOCIAL_CLICK", "linkedin")}
             >
               <Linkedin className="h-5 w-5" />
             </a>
@@ -235,6 +248,7 @@ export default function PortfolioHome() {
               href={portfolioData.resumePath}
               download="Sadnan_Nafis_CV.pdf"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-4 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-blue-600 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-blue-500 dark:hover:text-white"
+              onClick={() => trackEvent("DOWNLOAD_CV", "header")}
             >
               CV
               <FileDown className="h-3.5 w-3.5" />
@@ -294,6 +308,7 @@ export default function PortfolioHome() {
                 href={portfolioData.resumePath}
                 download="Sadnan_Nafis_CV.pdf"
                 className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-5 py-3 text-xs font-black uppercase tracking-wider text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-600 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-blue-500 dark:hover:text-white"
+                onClick={() => trackEvent("DOWNLOAD_CV", "hero")}
               >
                 Download Resume
                 <FileDown className="h-4 w-4" />
@@ -359,7 +374,10 @@ export default function PortfolioHome() {
                   className="h-[360px] flex flex-col justify-between bg-zinc-50 p-6 dark:bg-zinc-900/30 cursor-pointer group"
                 >
                   {/* Clickable Card Area */}
-                  <div className="flex-1 flex flex-col justify-between" onClick={() => setSelectedProject(project)}>
+                  <div className="flex-1 flex flex-col justify-between" onClick={() => {
+                    setSelectedProject(project);
+                    trackEvent("VIEW_PROJECT", project.id);
+                  }}>
                     <div>
                       {/* Category */}
                       <span className="text-[10px] font-black uppercase tracking-widest text-blue-500 dark:text-blue-400">
@@ -398,7 +416,10 @@ export default function PortfolioHome() {
                   {/* Actions (Links prevent modal bubbling) */}
                   <div className="mt-6 flex items-center justify-between border-t border-zinc-200/50 pt-4 dark:border-zinc-850">
                     <button
-                      onClick={() => setSelectedProject(project)}
+                      onClick={() => {
+                        setSelectedProject(project);
+                        trackEvent("VIEW_PROJECT", project.id);
+                      }}
                       className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-zinc-900 hover:text-blue-600 dark:text-zinc-100 dark:hover:text-blue-400"
                     >
                       Project Details

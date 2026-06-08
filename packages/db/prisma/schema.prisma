@@ -11,13 +11,13 @@ model Project {
   id           String   @id @default(uuid())
   title        String
   description  String
-  content      String   @db.Text // Markdown description of the project
-  imageUrl     String?  // Handled by Uploadthing
+  content      String   @db.Text
+  imageUrl     String?
   githubLink   String?
   demoLink     String?
-  tags         String[] // Array of tags (e.g., ["Next.js", "Redis"])
-  status       String   @default("DRAFT") // DRAFT, PUBLISHED
-  priority     Int      @default(0) // Higher value means top sorting
+  tags         String[]
+  status       String   @default("DRAFT")
+  priority     Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -25,19 +25,19 @@ model Project {
 model Skill {
   id          String   @id @default(uuid())
   name        String
-  category    String   // Frontend, Backend, DevOps, Language, etc.
-  proficiency Int      // 1-100 (optional representation)
-  iconName    String?  // lucide icon key name
+  category    String
+  proficiency Int
+  iconName    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Visitor {
   id                 String              @id @default(uuid())
-  firstTouchSource   String              // e.g., "linkedin", "github", "google", "direct"
-  firstTouchMedium   String?             // e.g., "social", "cpc", "organic", "none"
+  firstTouchSource   String
+  firstTouchMedium   String?
   firstTouchCampaign String?
-  firstTouchUrl      String              // First page they landed on
+  firstTouchUrl      String
   createdAt          DateTime            @default(now())
   sessions           Session[]
   submissions        ContactSubmission[]
@@ -47,18 +47,19 @@ model Session {
   id              String              @id @default(uuid())
   visitorId       String
   visitor         Visitor             @relation(fields: [visitorId], references: [id], onDelete: Cascade)
-  lastTouchSource String              // Source for this session
+  lastTouchSource String
   lastTouchMedium String?
-  referrer        String?             // Where they navigated from
-  landingPage     String              // Landing page for this session
-  gclid           String?             // Google Ads click ID
-  fbclid          String?             // Facebook click ID
+  referrer        String?
+  landingPage     String
+  gclid           String?
+  fbclid          String?
   utmSource       String?
   utmMedium       String?
   utmCampaign     String?
   utmContent      String?
   createdAt       DateTime            @default(now())
   submissions     ContactSubmission[]
+  events          AnalyticsEvent[]
 }
 
 model ContactSubmission {
@@ -70,5 +71,14 @@ model ContactSubmission {
   name      String
   email     String
   message   String
+  createdAt DateTime @default(now())
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  eventType String   // e.g. VIEW_PROJECT, DOWNLOAD_CV, TOGGLE_THEME, SOCIAL_CLICK
+  details   String?  // e.g. echosort, dark, github
   createdAt DateTime @default(now())
 }
