@@ -1,0 +1,74 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  content      String   @db.Text // Markdown description of the project
+  imageUrl     String?  // Handled by Uploadthing
+  githubLink   String?
+  demoLink     String?
+  tags         String[] // Array of tags (e.g., ["Next.js", "Redis"])
+  status       String   @default("DRAFT") // DRAFT, PUBLISHED
+  priority     Int      @default(0) // Higher value means top sorting
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  name        String
+  category    String   // Frontend, Backend, DevOps, Language, etc.
+  proficiency Int      // 1-100 (optional representation)
+  iconName    String?  // lucide icon key name
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Visitor {
+  id                 String              @id @default(uuid())
+  firstTouchSource   String              // e.g., "linkedin", "github", "google", "direct"
+  firstTouchMedium   String?             // e.g., "social", "cpc", "organic", "none"
+  firstTouchCampaign String?
+  firstTouchUrl      String              // First page they landed on
+  createdAt          DateTime            @default(now())
+  sessions           Session[]
+  submissions        ContactSubmission[]
+}
+
+model Session {
+  id              String              @id @default(uuid())
+  visitorId       String
+  visitor         Visitor             @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  lastTouchSource String              // Source for this session
+  lastTouchMedium String?
+  referrer        String?             // Where they navigated from
+  landingPage     String              // Landing page for this session
+  gclid           String?             // Google Ads click ID
+  fbclid          String?             // Facebook click ID
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+  utmContent      String?
+  createdAt       DateTime            @default(now())
+  submissions     ContactSubmission[]
+}
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  visitorId String
+  visitor   Visitor  @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
